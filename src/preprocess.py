@@ -1,26 +1,16 @@
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-import pickle
-import os
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_iris
 
-def preprocess_data(df, training=True):
-    """Preprocess dataset: encode categorical features & target"""
+def load_data(test_size=0.2, random_state=42):
+    """
+    Contoh fungsi load dataset Iris dari sklearn.
+    Return: X_train, X_test, y_train, y_test
+    """
+    data = load_iris()
+    X = data.data
+    y = data.target
 
-    encoders = {}
-    for col in df.select_dtypes(include=["object"]).columns:
-        le = LabelEncoder()
-        df[col] = le.fit_transform(df[col])
-        encoders[col] = le
-
-    if training:
-        os.makedirs("models", exist_ok=True)
-        with open("models/encoders.pkl", "wb") as f:
-            pickle.dump(encoders, f)
-
-    return df
-
-if __name__ == "__main__":
-    df = pd.read_csv("data/personality_dataset.csv")
-    df = preprocess_data(df, training=True)
-    df.to_csv("data/personality_preprocessed.csv", index=False)
-    print("✅ Preprocessing done, saved to data/personality_preprocessed.csv")
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=test_size, random_state=random_state
+    )
+    return X_train, X_test, y_train, y_test
