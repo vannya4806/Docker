@@ -1,20 +1,20 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
+import pickle
 
-def load_and_preprocess(filepath):
-    df = pd.read_csv(filepath)
+# Load model
+with open("models/model.pkl", "rb") as f:
+    model = pickle.load(f)
 
-    # Handle missing values
-    df = df.fillna(df.mode().iloc[0])
+# Input CSV
+df = pd.read_csv("data/input.csv")
 
-    # Encode categorical
-    label_enc = LabelEncoder()
-    df["Stage_fear"] = label_enc.fit_transform(df["Stage_fear"])
-    df["Drained_after_socializing"] = label_enc.fit_transform(df["Drained_after_socializing"])
-    df["Personality"] = label_enc.fit_transform(df["Personality"])
+# Encode gender
+df["Gender"] = df["Gender"].map({"Male": 1, "Female": 0})
 
-    X = df.drop("Personality", axis=1)
-    y = df["Personality"]
+# Predict
+predictions = model.predict(df)
+df["Prediction"] = predictions
 
-    return train_test_split(X, y, test_size=0.2, random_state=42)
+# Save output
+df.to_csv("data/output_predictions.csv", index=False)
+print("✅ Predictions saved to data/output_predictions.csv")
