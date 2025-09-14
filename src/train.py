@@ -17,7 +17,7 @@ def train_and_save():
     os.makedirs("models", exist_ok=True)
 
     # 5. Simpan model
-    joblib.dump(model, "models/model.pkl")
+    joblib.dump(model, "src/model.py")
 
     print("✅ Model berhasil dilatih dan disimpan ke models/model.pkl")
 
