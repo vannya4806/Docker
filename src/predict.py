@@ -1,35 +1,30 @@
-import argparse
 import pickle
-import numpy as np
+import pandas as pd
 
-# Load model
+# Load model & encoders
 with open("models/model.pkl", "rb") as f:
     model = pickle.load(f)
 
-# Argument parser for CLI
-parser = argparse.ArgumentParser()
-parser.add_argument("--age", type=int, required=True)
-parser.add_argument("--gender", type=str, required=True)
-parser.add_argument("--openness", type=float, required=True)
-parser.add_argument("--neuroticism", type=float, required=True)
-parser.add_argument("--conscientiousness", type=float, required=True)
-parser.add_argument("--agreeableness", type=float, required=True)
-parser.add_argument("--extraversion", type=float, required=True)
+with open("models/encoders.pkl", "rb") as f:
+    encoders = pickle.load(f)
 
-args = parser.parse_args()
+def predict(sample):
+    # Convert dict → DataFrame
+    df = pd.DataFrame([sample])
 
-# Encode gender (contoh sederhana)
-gender = 1 if args.gender.lower() == "male" else 0
+    # Encode with same encoders
+    for col, le in encoders.items():
+        if col in df.columns:
+            df[col] = le.transform(df[col])
 
-features = np.array([
-    args.age,
-    gender,
-    args.openness,
-    args.neuroticism,
-    args.conscientiousness,
-    args.agreeableness,
-    args.extraversion
-]).reshape(1, -1)
+    return model.predict(df)[0]
 
-prediction = model.predict(features)[0]
-print(f"🎯 Predicted Personality: {prediction}")
+if __name__ == "__main__":
+    sample_input = {
+        "Gender": "Male",
+        "Openness": "High",
+        "Neuroticism": "Low",
+        "Personality": "???"  # target ignored
+    }
+    prediction = predict(sample_input)
+    print("✅ Prediction:", prediction)
