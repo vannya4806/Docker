@@ -1,14 +1,24 @@
-import joblib
+import pandas as pd
+from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from preprocessing import load_and_preprocess
+import pickle
+import os
 
-if __name__ == "__main__":
-    X_train, X_test, y_train, y_test = load_and_preprocess("data/personality_dataset.csv")
+# Load dataset
+df = pd.read_csv("data/personality_dataset.csv")
 
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
-    model.fit(X_train, y_train)
+X = df.drop("Personality", axis=1)
+y = df["Personality"]
 
-    acc = model.score(X_test, y_test)
-    print(f"✅ Model trained with accuracy: {acc:.2f}")
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    joblib.dump(model, "models/model.pkl")
+# Train model
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# Save model
+os.makedirs("models", exist_ok=True)
+with open("models/model.pkl", "wb") as f:
+    pickle.dump(model, f)
+
+print("✅ Model trained and saved to models/model.pkl")
