@@ -1,3 +1,5 @@
 Tugas Docker MLOps
 
-menggunakan dataset: introvert vs ekstrovert personality
+
+Nama: Vannya Ade Gunawan
+NIM: 235150200111069
