@@ -1,25 +1,20 @@
+# src/train.py
+from src.preprocess import load_and_preprocess
+from sklearn.linear_model import LogisticRegression
+import pickle
 import os
-import joblib
-from src.preprocess import load_data
-from src.model import build_model
-
-def train_and_save():
-    # 1. Ambil data
-    X_train, X_test, y_train, y_test = load_data()
-
-    # 2. Build model
-    model = build_model()
-
-    # 3. Train
-    model.fit(X_train, y_train)
-
-    # 4. Pastikan folder models ada
-    os.makedirs("models", exist_ok=True)
-
-    # 5. Simpan model
-    joblib.dump(model, "src/model.py")
-
-    print("✅ Model berhasil dilatih dan disimpan ke models/model.pkl")
 
 if __name__ == "__main__":
-    train_and_save()
+    # Load & preprocess data
+    X_train, X_test, y_train, y_test = load_and_preprocess("personality_dataset.csv")
+
+    # Buat model langsung
+    model = LogisticRegression(max_iter=1000, random_state=42)
+    model.fit(X_train, y_train)
+
+    # Simpan ke models/model.pkl
+    os.makedirs("models", exist_ok=True)
+    with open("models/model.pkl", "wb") as f:
+        pickle.dump(model, f)
+
+    print("✅ Model dilatih dan disimpan ke models/model.pkl")
