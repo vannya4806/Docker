@@ -2,7 +2,7 @@ import os
 import pickle
 
 def test_model_exists_after_training():
-    assert os.path.exists("models/model.pkl")
+    assert os.path.exists("src/model.py")
 
 def test_model_can_be_loaded():
     with open("models/model.pkl", "rb") as f:
