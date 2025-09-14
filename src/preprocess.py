@@ -11,6 +11,6 @@ def load_and_preprocess(test_size=0.2, random_state=42):
     y = data.target
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state
+        X, y, test_size=0.2, random_state=None
     )
     return X_train, X_test, y_train, y_test
