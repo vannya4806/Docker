@@ -25,7 +25,7 @@ jobs:
 
       - name: Train model
         run: |
-          python src/train.py
+          python -m src.train
 
       - name: Upload model artifact
         uses: actions/upload-artifact@v4
@@ -35,7 +35,7 @@ jobs:
 
   predict:
     runs-on: ubuntu-latest
-    needs: train   # harus nunggu train selesai
+    needs: train
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -58,11 +58,11 @@ jobs:
 
       - name: Run prediction
         run: |
-          python src/predict.py
+          python -m src.predict
 
   docker:
     runs-on: ubuntu-latest
-    needs: predict   # nunggu prediksi berhasil
+    needs: predict
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
