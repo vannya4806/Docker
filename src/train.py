@@ -1,30 +1,25 @@
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-import pickle
 import os
-from preprocess import preprocess_data
+import joblib
+from src.preprocess import load_data
+from src.model import build_model
 
-# Load dataset
-df = pd.read_csv("data/personality_dataset.csv")
+def train_and_save():
+    # 1. Ambil data
+    X_train, X_test, y_train, y_test = load_data()
 
-# Preprocess
-df = preprocess_data(df, training=True)
+    # 2. Build model
+    model = build_model()
 
-# Split features & target
-X = df.drop("Personality", axis=1)
-y = df["Personality"]
+    # 3. Train
+    model.fit(X_train, y_train)
 
-# Train test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    # 4. Pastikan folder models ada
+    os.makedirs("models", exist_ok=True)
 
-# Train model
-model = RandomForestClassifier(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
+    # 5. Simpan model
+    joblib.dump(model, "models/model.pkl")
 
-# Save model
-os.makedirs("models", exist_ok=True)
-with open("models/model.pkl", "wb") as f:
-    pickle.dump(model, f)
+    print("✅ Model berhasil dilatih dan disimpan ke models/model.pkl")
 
-print("✅ Model trained and saved to models/model.pkl")
+if __name__ == "__main__":
+    train_and_save()
