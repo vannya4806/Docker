@@ -6,4 +6,4 @@ joblib
 pytest
 mlflow
 pyyaml
-dvc
+dvc[all]
