@@ -8,6 +8,20 @@ from sklearn.metrics import accuracy_score
 import joblib
 import yaml
 
+from sklearn.preprocessing import LabelEncoder
+
+# Pisahkan fitur dan target
+X = df.drop('Personality', axis=1)
+y = df['Personality']
+
+# Encode semua kolom kategorikal ke numerik
+for col in X.select_dtypes(include=['object']).columns:
+    le = LabelEncoder()
+    X[col] = le.fit_transform(X[col])
+
+# Encode target juga
+y = LabelEncoder().fit_transform(y)
+
 def load_params(path):
     with open(path) as f:
         return yaml.safe_load(f)
