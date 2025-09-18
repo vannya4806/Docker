@@ -1,0 +1,5 @@
+train:
+  model: "LogisticRegression"
+  max_iter: 300
+  test_size: 0.2
+  random_state: 42
