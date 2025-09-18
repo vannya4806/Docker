@@ -4,3 +4,6 @@ scikit-learn
 pandas
 joblib
 pytest
+mlflow
+pyyaml
+dvc
