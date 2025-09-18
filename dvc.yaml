@@ -1,0 +1,26 @@
+stages:
+  preprocess:
+    cmd: python src/preprocess.py --input data/personality_dataset.csv --output data/processed.csv
+    deps:
+      - src/preprocess.py
+      - data/personality_dataset.csv
+    outs:
+      - data/processed.csv
+
+  train:
+    cmd: python src/train.py --input data/processed.csv --model models/model.pkl --params params.yaml
+    deps:
+      - src/train.py
+      - data/processed.csv
+      - params.yaml
+    outs:
+      - models/model.pkl
+
+  evaluate:
+    cmd: python src/evaluate.py --model models/model.pkl --data data/processed.csv --output metrics.json
+    deps:
+      - src/evaluate.py
+      - models/model.pkl
+      - data/processed.csv
+    metrics:
+      - metrics.json
