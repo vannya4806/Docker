@@ -3,7 +3,6 @@ stages:
     cmd: python src/preprocess.py --input data/personality_dataset.csv --output data/personality_dataset.csv
     deps:
       - src/preprocess.py
-      - data/personality_dataset.csv
     outs:
       - data/personality_dataset.csv
 
