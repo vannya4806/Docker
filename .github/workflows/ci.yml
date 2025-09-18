@@ -11,11 +11,6 @@ jobs:
   train:
     runs-on: ubuntu-latest
     steps:
-      - name: Install DVC
-        run: pip install dvc[s3]  # sesuaikan remote kamu (misal [gdrive], [azure], dll)
-      
-      - name: Pull data from DVC
-        run: dvc pull
 
       - name: Checkout repo
         uses: actions/checkout@v4
