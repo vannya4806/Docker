@@ -15,10 +15,10 @@ def load_params(path):
 def train_model(input_path: str, model_out: str, params_path: str):
     params = load_params(params_path)
     df = pd.read_csv(input_path)
-    if 'target' not in df.columns:
-        raise ValueError("Dataset harus punya kolom 'target'")
-    X = df.drop('target', axis=1)
-    y = df['target']
+    if 'Personality' not in df.columns:
+        raise ValueError("Dataset harus punya kolom 'Personality'")
+    X = df.drop('Personality', axis=1)
+    y = df['Personality']
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, 
