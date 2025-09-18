@@ -53,7 +53,7 @@ def train_model(input_path: str, model_out: str, params_path: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", type=str, default="data/processed.csv")
+    parser.add_argument("--input", type=str, default="data/personality_dataset.csv")
     parser.add_argument("--model", type=str, default="models/model.pkl")
     parser.add_argument("--params", type=str, default="params.yaml")
     args = parser.parse_args()
