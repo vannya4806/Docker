@@ -7,10 +7,9 @@ on:
     branches: [ "main" ]
 
 jobs:
-  # === 1. Train & Track with MLflow ===
-  # === 1. Train & Track with MLflow ===
   train:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -35,11 +34,12 @@ jobs:
             echo "✅ DVC already initialized."
           fi
 
-      - name: Run DVC pipeline
+      # 🧠 Langsung jalankan train.py tanpa preprocess
+      - name: Run training script directly
         run: |
-          echo "🚀 Running DVC pipeline..."
-          dvc repro -f || (echo "❌ DVC repro failed!" && exit 1)
-          dvc metrics show || echo "ℹ️ No metrics to show."
+          echo "🚀 Running training script..."
+          python src/train.py --input data/personality_dataset.csv --output models/model.pkl || (echo "❌ Training failed!" && exit 1)
+          echo "✅ Training completed successfully!"
 
       - name: Upload model artifact
         uses: actions/upload-artifact@v4
