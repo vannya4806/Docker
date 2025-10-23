@@ -12,5 +12,5 @@ if __name__ == "__main__":
   # Simpan ke models/model.pkl
   os.makedirs("models", exist_ok=True)
   with open("models/model.pkl", "wb") as f:
-  pickle.dump(model, f)
+    pickle.dump(model, f)
   print("✅ Model dilatih dan disimpan ke models/model.pkl")
