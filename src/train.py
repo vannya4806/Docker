@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 
 if __name__ == "__main__":
     # --- Load data langsung ---
-    df = pd.read_csv("personality_dataset.csv")  # Pastikan file ini ada di repo
+    df = pd.read_csv("data/personality_dataset.csv")  # Pastikan file ini ada di repo
     print(f"✅ Dataset loaded, shape: {df.shape}")
 
     # Misal kolom target bernama 'label' — ganti sesuai dataset kamu
