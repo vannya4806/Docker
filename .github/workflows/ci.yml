@@ -63,9 +63,10 @@ jobs:
         run: |
           python src/predict.py
 
-  # === 3. Experiment with DVC ===
-  experiment:
+    # === 3. Docker Build, DVC & Push ===
+  docker:
     runs-on: ubuntu-latest
+    needs: [train, predict]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -81,24 +82,10 @@ jobs:
           pip install -r requirements.txt
           pip install dvc[all]
 
-      - name: Setup DVC
+      - name: Run DVC pipeline
         run: |
           dvc init || echo "DVC already initialized"
           dvc repro
-
-      - name: Upload metrics
-        uses: actions/upload-artifact@v4
-        with:
-          name: metrics
-          path: metrics.json
-
-  # === 4. Docker Build & Push ===
-  docker:
-    runs-on: ubuntu-latest
-    needs: [train, predict, experiment]
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -112,3 +99,10 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/personality-ml:latest
+
+      - name: Upload metrics (optional)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: metrics
+          path: metrics.json
