@@ -13,7 +13,7 @@ if __name__ == "__main__":
     print(f"✅ Dataset loaded, shape: {df.shape}")
 
     # Misal kolom target bernama 'label' — ganti sesuai dataset kamu
-    target_col = "label"
+    target_col = "Personality"
     X = df.drop(columns=[target_col])
     y = df[target_col]
 
