@@ -6,16 +6,29 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 
 if __name__ == "__main__":
     # --- Load data langsung ---
     df = pd.read_csv("data/personality_dataset.csv")  # Pastikan file ini ada di repo
     print(f"✅ Dataset loaded, shape: {df.shape}")
 
-    # Misal kolom target bernama 'label' — ganti sesuai dataset kamu
+    # Misal kolom target bernama 'Personality' — ganti sesuai dataset kamu
     target_col = "Personality"
     X = df.drop(columns=[target_col])
     y = df[target_col]
+
+    # --- Encode fitur kategorikal ---
+    cat_cols = X.select_dtypes(include=["object"]).columns
+    if len(cat_cols) > 0:
+        print("🔄 Encoding kolom kategorikal:", cat_cols.tolist())
+        le = LabelEncoder()
+        for col in cat_cols:
+            X[col] = le.fit_transform(X[col].astype(str))
+
+    # Encode target juga kalau berupa string
+    if y.dtype == "object":
+        y = LabelEncoder().fit_transform(y)
 
     # --- Split data ---
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
