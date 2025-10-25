@@ -10,13 +10,20 @@ from sklearn.preprocessing import LabelEncoder
 
 if __name__ == "__main__":
     # --- Load data langsung ---
-    df = pd.read_csv("data/personality_dataset.csv")  # Pastikan file ini ada di repo
+    df = pd.read_csv("data/personality_dataset.csv")
     print(f"✅ Dataset loaded, shape: {df.shape}")
 
-    # Misal kolom target bernama 'Personality' — ganti sesuai dataset kamu
     target_col = "Personality"
     X = df.drop(columns=[target_col])
     y = df[target_col]
+
+    # --- Tangani NaN ---
+    for col in X.columns:
+        if X[col].isnull().sum() > 0:
+            if X[col].dtype == 'object':
+                X[col].fillna(X[col].mode()[0], inplace=True)
+            else:
+                X[col].fillna(X[col].mean(), inplace=True)
 
     # --- Encode fitur kategorikal ---
     cat_cols = X.select_dtypes(include=["object"]).columns
@@ -36,33 +43,27 @@ if __name__ == "__main__":
     # --- Set parameter model ---
     params = {"max_iter": 1000, "random_state": 42}
 
-    # --- Mulai experiment MLflow ---
-    mlflow.set_tracking_uri("file:./mlruns")  # Simpan log ke folder lokal mlruns/
+    # --- MLflow setup ---
+    mlflow.set_tracking_uri("file:./mlruns")
     mlflow.set_experiment("personality-ml-experiment")
 
     with mlflow.start_run():
-        # Log parameter
         mlflow.log_params(params)
 
-        # --- Train model ---
         model = LogisticRegression(**params)
         model.fit(X_train, y_train)
 
-        # --- Evaluasi ---
         y_pred = model.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
         print(f"✅ Akurasi model: {acc:.4f}")
 
-        # Log metric ke MLflow
         mlflow.log_metric("accuracy", acc)
 
-        # --- Simpan model lokal ---
         os.makedirs("models", exist_ok=True)
         with open("models/model.pkl", "wb") as f:
             pickle.dump(model, f)
         print("✅ Model disimpan ke models/model.pkl")
 
-        # Log model ke MLflow
         mlflow.sklearn.log_model(model, "model")
 
     print("🏁 Training selesai & tercatat di MLflow.")
